@@ -1,0 +1,5 @@
+# Compose Multiplatform. A module with no version falls back to an older default of the toolchain.
+settings:
+  compose:
+    enabled: true
+    version: 1.13.0-beta01

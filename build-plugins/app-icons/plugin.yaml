@@ -1,0 +1,12 @@
+tasks:
+  syncAppIcons:
+    action: !io.github.yuroyami.buildplugins.appicons.syncAppIcons
+      logoForeground: ${project.rootDir}/art/logo_foreground.png
+      logoBackground: ${project.rootDir}/art/logo_background.png
+      androidResources: ${module.rootDir}/res
+      iosAppIcon: ${project.rootDir}/iosApp/src/Assets.xcassets/AppIcon.appiconset
+      androidLogoPercent: 60
+      iosLogoPercent: 80
+
+commands:
+  - syncAppIcons

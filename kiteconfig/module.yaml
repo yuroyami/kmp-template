@@ -1,0 +1,21 @@
+# Installed by install-kiteconfig.sh from KiteConfig 3.1.0.
+# Run the script again to update this folder. Do not edit the files in it.
+
+product: jvm/amper-plugin
+
+description: Generates KiteBuildConfig, syncs the Xcode project, and checks the Android settings of a Kotlin Toolchain project.
+
+repositories:
+  - id: gradlePluginPortal
+    url: https://plugins.gradle.org/m2
+
+dependencies:
+  - io.github.yuroyami:kiteconfig:3.1.0
+
+settings:
+  kotlin:
+    version: 2.4.21
+    optIns: [ io.github.yuroyami.kiteconfig.core.InternalKiteCoreApi ]
+
+pluginInfo:
+  settingsClass: io.github.yuroyami.kiteconfig.toolchain.KiteConfigSettings

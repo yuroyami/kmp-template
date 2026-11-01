@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# The workflow only reads the repository and uploads its own artifacts.
+permissions:
+  contents: read
+
+# A new run on the same ref cancels the older run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KOTLIN_CLI_NO_WELCOME_BANNER: 1
+
+# The Kotlin Toolchain downloads its own JDKs and Kotlin/Native. The Android build runs in Gradle under
+# ~/.gradle, and Kotlin/Native keeps LLVM in ~/.konan. Each job caches the folders that it uses.
+# Actions are pinned to a commit. The comment names the tag.
+jobs:
+  build:
+    name: Checks, tests and release APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Cache the Kotlin Toolchain downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/JetBrains/Kotlin
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: kotlin-toolchain-${{ runner.os }}-${{ hashFiles('kotlin', 'project.yaml', '**/module.yaml', '*.module-template.yaml', 'libs.versions.toml', 'build-plugins/**/plugin.yaml') }}
+          restore-keys: kotlin-toolchain-${{ runner.os }}-
+
+      - name: Run every check
+        run: scripts/verify.sh
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-reports
+          path: build/reports/
+          if-no-files-found: ignore
+
+  ios:
+    name: iOS tests and simulator app
+    # macOS minutes cost money on a private repository. Set the variable RUN_MACOS_CI to true to run this job there.
+    if: ${{ !github.event.repository.private || vars.RUN_MACOS_CI == 'true' || github.event_name == 'workflow_dispatch' }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Cache the Kotlin Toolchain downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/Library/Caches/JetBrains/Kotlin
+            ~/.konan
+          key: kotlin-toolchain-${{ runner.os }}-${{ hashFiles('kotlin', 'project.yaml', '**/module.yaml', '*.module-template.yaml', 'libs.versions.toml', 'build-plugins/**/plugin.yaml') }}
+          restore-keys: kotlin-toolchain-${{ runner.os }}-
+
+      - name: Run the iOS checks
+        run: scripts/verify.sh apple

@@ -1,0 +1,21 @@
+*.iml
+/local.properties
+/.idea
+.DS_Store
+**/build
+/captures
+*.hprof
+.claude/settings.local.json
+
+# Release signing: the keystore and androidApp/keystore.properties with its passwords.
+keystore/
+*.jks
+*.keystore
+keystore.properties
+
+# Xcode
+**/xcuserdata/
+*.xcuserstate
+
+# KiteConfig keeps a backup of project.pbxproj after kiteSyncIos.
+*.kiteconfig.bak

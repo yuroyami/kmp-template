@@ -1,0 +1,15 @@
+<resources>
+    <string name="back">Back</string>
+    <string name="settings">Settings</string>
+    <string name="theme_system">Follow the system</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="version">Version %1$s</string>
+    <string name="count">Count</string>
+    <string name="show_message">Show a message</string>
+    <string name="message">This message stays when you change the screen.</string>
+    <plurals name="clicks">
+        <item quantity="one">%1$d click</item>
+        <item quantity="other">%1$d clicks</item>
+    </plurals>
+</resources>

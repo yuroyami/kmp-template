@@ -1,0 +1,47 @@
+product:
+  type: kmp/lib
+  # Apple silicon only: Compose Multiplatform publishes no iosX64 (Intel simulator) variant.
+  platforms: [ android, iosArm64, iosSimulatorArm64, jvm ]
+
+description: The app code and the Compose UI of every platform.
+
+apply:
+  - //common.module-template.yaml
+  - //compose.module-template.yaml
+  - //android.module-template.yaml
+  # Generates kiteconfig.generated.KiteBuildConfig with the app name and the version.
+  - //app-identity.module-template.yaml
+
+aliases:
+  # The two tests read saved state and files, which an Android host test does not have.
+  - nonAndroid: [ jvm, iosArm64, iosSimulatorArm64 ]
+
+dependencies:
+  - $compose.foundation
+  - $compose.ui
+  - $libs.compose.material3
+  - $libs.navigation3.runtime
+  - $libs.navigation3.ui
+  - $libs.lifecycle.viewmodel.navigation3
+  - $libs.kotlinx.coroutines.core
+  - $libs.datastore.preferences.core
+  - $libs.kermit
+
+dependencies@android:
+  - $libs.androidx.activity.compose
+  - $libs.androidx.core.splashscreen
+  - $libs.kotlinx.coroutines.android
+
+test-dependencies:
+  - $libs.kotlinx.coroutines.test
+
+settings:
+  kotlin:
+    serialization:
+      enabled: true
+      version: 1.12.0
+  android:
+    namespace: app
+  compose:
+    resources:
+      packageName: app.generated.resources

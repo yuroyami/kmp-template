@@ -1,0 +1,23 @@
+# The iOS app: a SwiftUI host in src/iOSApp.swift that shows the Compose UI of the shared module.
+# module.xcodeproj holds the bundle ID, the version, the build number and the deployment target (15.0).
+# `./kotlin check kiteIos` checks the first three against app-identity.module-template.yaml.
+product:
+  type: ios/app
+  platforms: [ iosArm64, iosSimulatorArm64 ]
+
+apply:
+  - //common.module-template.yaml
+  - //app-identity.module-template.yaml
+
+dependencies:
+  - //shared
+
+plugins:
+  # `./kotlin do kiteSyncIos` writes the bundle ID, the version and the build number of
+  # app-identity.module-template.yaml into the Xcode project.
+  kiteconfig:
+    ios:
+      xcodeProject: module.xcodeproj
+    # The shared module already has KiteBuildConfig.
+    buildConfig:
+      enabled: false

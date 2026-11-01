@@ -1,0 +1,12 @@
+modules:
+  - androidApp
+  - build-plugins/android-inputs
+  - build-plugins/app-icons
+  - iosApp
+  - kiteconfig
+  - shared
+
+plugins:
+  - ./kiteconfig
+  - //build-plugins/android-inputs
+  - //build-plugins/app-icons

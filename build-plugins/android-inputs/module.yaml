@@ -1,0 +1,8 @@
+product: jvm/amper-plugin
+
+description: >-
+  Stamps the res/ folder, the manifest and the R8 rules of an Android app into its jar, so that the Android build
+  packages a change in those files.
+
+apply:
+  - //common.module-template.yaml

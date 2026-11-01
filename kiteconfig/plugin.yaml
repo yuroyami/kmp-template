@@ -1,0 +1,64 @@
+tasks:
+  buildConfig:
+    action: !io.github.yuroyami.kiteconfig.toolchain.generateBuildConfig
+      appName: ${pluginSettings.appName}
+      version: ${pluginSettings.version}
+      rebuild: ${pluginSettings.rebuild}
+      buildNumber: ${pluginSettings.buildNumber}
+      appId: ${pluginSettings.appId}
+      androidApplicationId: ${pluginSettings.androidApplicationId}
+      iosBundleId: ${pluginSettings.iosBundleId}
+      locales: ${pluginSettings.locales}
+      buildConfig: ${pluginSettings.buildConfig}
+      outputDir: ${taskOutputDir}
+
+  syncIos:
+    action: !io.github.yuroyami.kiteconfig.toolchain.syncXcodeProject
+      version: ${pluginSettings.version}
+      rebuild: ${pluginSettings.rebuild}
+      buildNumber: ${pluginSettings.buildNumber}
+      appId: ${pluginSettings.appId}
+      iosBundleId: ${pluginSettings.iosBundleId}
+      locales: ${pluginSettings.locales}
+      xcodeProject: ${pluginSettings.ios.xcodeProject}
+      targets: ${pluginSettings.ios.targets}
+      projectRootDir: ${module.rootDir}
+
+  checkIos:
+    action: !io.github.yuroyami.kiteconfig.toolchain.checkXcodeProject
+      version: ${pluginSettings.version}
+      rebuild: ${pluginSettings.rebuild}
+      buildNumber: ${pluginSettings.buildNumber}
+      appId: ${pluginSettings.appId}
+      iosBundleId: ${pluginSettings.iosBundleId}
+      locales: ${pluginSettings.locales}
+      xcodeProject: ${pluginSettings.ios.xcodeProject}
+      targets: ${pluginSettings.ios.targets}
+      projectRootDir: ${module.rootDir}
+
+  checkAndroid:
+    action: !io.github.yuroyami.kiteconfig.toolchain.checkAndroidSettings
+      checkSettings: ${pluginSettings.android.checkSettings}
+      version: ${pluginSettings.version}
+      rebuild: ${pluginSettings.rebuild}
+      buildNumber: ${pluginSettings.buildNumber}
+      appId: ${pluginSettings.appId}
+      androidApplicationId: ${pluginSettings.androidApplicationId}
+      applicationId: ${module.settings.android.applicationId}
+      versionCode: ${module.settings.android.versionCode}
+      versionName: ${module.settings.android.versionName}
+
+generated:
+  sources:
+    - language: kotlin
+      directory: ${tasks.buildConfig.action.outputDir}
+
+commands:
+  - name: kiteSyncIos
+    performedBy: syncIos
+
+checks:
+  - name: kiteIos
+    performedBy: checkIos
+  - name: kiteAndroid
+    performedBy: checkAndroid

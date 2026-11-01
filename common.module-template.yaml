@@ -1,0 +1,8 @@
+# Settings that every module shares, build plugins included.
+settings:
+  kotlin:
+    version: 2.4.21
+  jvm:
+    # The JDK that compiles and tests every module. The bytecode target follows it.
+    jdk:
+      version: 21

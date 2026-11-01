@@ -1,0 +1,42 @@
+# The Android app. It hosts the shared Compose UI (app.AppActivity in the shared module).
+product: android/app
+
+apply:
+  - //common.module-template.yaml
+  - //android.module-template.yaml
+  - //app-identity.module-template.yaml
+
+dependencies:
+  - //shared
+
+settings:
+  android:
+    namespace: app.android
+    # Google Play cannot change the application ID after the first upload.
+    # applicationId, versionName and versionCode must match app-identity.module-template.yaml. The
+    # Kotlin Toolchain does not let a plugin set them, so `./kotlin check kiteAndroid` fails when they
+    # differ and prints the lines to write.
+    applicationId: com.example.kmptemplate
+    versionName: 0.1.0
+    versionCode: 1000001000
+    targetSdk: 37
+    # The release build reads the keystore details from androidApp/keystore.properties
+    # (storeFile, storePassword, keyAlias, keyPassword). Git ignores that file. Without it, the
+    # release build is not signed.
+    signing:
+      enabled: true
+
+plugins:
+  kiteconfig:
+    android:
+      checkSettings: true
+    # The shared module already has KiteBuildConfig.
+    buildConfig:
+      enabled: false
+  # Without this plugin, a change in res/, src/AndroidManifest.xml or proguard-rules.pro alone
+  # leaves the APK unchanged.
+  android-inputs:
+    enabled: true
+  # `./kotlin do syncAppIcons` writes the launcher PNGs and the iOS icon from art/.
+  app-icons:
+    enabled: true

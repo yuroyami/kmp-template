@@ -1,0 +1,15 @@
+# Delete this plugin when a toolchain release has KTC-6050 (https://youtrack.jetbrains.com/issue/KTC-6050).
+# That toolchain issue adds res/, the manifest and the R8 rules to the inputs of the APK build.
+tasks:
+  # The toolchain rebuilds the APK only when the app's classpath or its Android settings change.
+  # This stamp goes into the app's jar, so a change in res/, the manifest or the R8 rules makes the Android build run again.
+  stamp:
+    action: !io.github.yuroyami.buildplugins.androidinputs.stampAndroidInputs
+      resDir: ${module.rootDir}/res
+      manifest: ${module.rootDir}/src/AndroidManifest.xml
+      proguardRules: ${module.rootDir}/proguard-rules.pro
+      outputDir: ${taskOutputDir}/resources
+
+generated:
+  resources:
+    - directory: ${tasks.stamp.action.outputDir}

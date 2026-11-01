@@ -1,0 +1,8 @@
+product: jvm/amper-plugin
+
+description: >-
+  Writes the Android launcher PNGs and the iOS app icon from the two PNGs in art/.
+  Run it with `./kotlin do syncAppIcons`. A normal build never runs it.
+
+apply:
+  - //common.module-template.yaml

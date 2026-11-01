@@ -1,0 +1,15 @@
+# The app identity that every platform shares. To change the version, follow "App identity" in README.md.
+# KiteConfig reads this file. It generates KiteBuildConfig for the shared code and writes the iOS
+# values into the Xcode project (`./kotlin do kiteSyncIos`). `./kotlin check kiteAndroid kiteIos`
+# fails when the Android or the Xcode values differ from this file.
+
+plugins:
+  kiteconfig:
+    enabled: true
+    appName: KmpTemplate
+    # The build number is 1MMMmmmppr (major, minor, patch, rebuild digit): 0.1.0 gives 1000001000.
+    # Raise rebuild (0 to 9) to upload the same version again.
+    version: 0.1.0
+    # Google Play cannot change the application ID after the first upload.
+    appId: com.example.kmptemplate
+    iosBundleId: com.example.kmptemplate.ios

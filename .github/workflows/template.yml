@@ -1,0 +1,47 @@
+name: Template
+
+# Proves that the rename script works. scripts/new-app.sh deletes this file.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  KOTLIN_CLI_NO_WELCOME_BANNER: 1
+
+jobs:
+  rename:
+    name: Rename to a new app
+    # A repository made from this template must not run this job on its first commit.
+    if: github.repository == 'yuroyami/kmp-template'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Cache the Kotlin Toolchain downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/JetBrains/Kotlin
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: kotlin-toolchain-${{ runner.os }}-${{ hashFiles('kotlin', 'project.yaml', '**/module.yaml', '*.module-template.yaml', 'libs.versions.toml', 'build-plugins/**/plugin.yaml') }}
+          restore-keys: kotlin-toolchain-${{ runner.os }}-
+
+      - name: Rename
+        run: scripts/new-app.sh "Two Words" com.example.twowords
+
+      # Use `if`, not `! git grep`: `set -e` ignores a failed `!` line.
+      - name: Check that no template name is left
+        run: |
+          if git grep -nE 'KmpTemplate|kmptemplate'; then exit 1; fi
+          grep -q 'PRODUCT_NAME = "Two Words"' iosApp/module.xcodeproj/project.pbxproj
+
+      - name: Check the app identity
+        run: ./kotlin check kiteAndroid kiteIos
+
+      - name: Build the debug APK
+        run: ./kotlin build -m androidApp -p android
